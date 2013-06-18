@@ -1,0 +1,12 @@
+{
+    "name": "shower-server",
+    "description": "simple Shower server allowing multiple clients view slides in sync with presenter",
+    "version": "0.1.0",
+    "dependencies": {
+        "express": "3.x",
+        "socket.io": "~0.9.16"
+    },
+    "author": "Igor Shevchenko <cyberskunk@yandex.ru>",
+    "license": "MIT",
+    "readmeFilename": "README.md"
+}
