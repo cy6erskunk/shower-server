@@ -60,7 +60,8 @@ USAGE
 1. Put your presentations in some folders in shower-server folder
 1. Put `config.json` file in the root of shower-server folder
     E.g.:
-
+    
+    ```json
     {
         "presentations" : [
             {
@@ -85,19 +86,26 @@ USAGE
             }
         ]
     }
+    ```
+    + `url` defaults to `folder`
+    - `file` defaults to `index.html`
+    - `master` may be absent, masterKey will be generated for you
 
-+ `url` defaults to `folder`
-- `file` defaults to `index.html`
-- `master` may be absent, it will be generated for you
-
-Messages are broadcated by `url`, so the same presentation may be shown by several masters
+    Messages are broadcated by `url`, so the same presentation may be shown by several masters
 
 1. Run `./bin/shower-server`
-
-1. Open your presentation at
+    You'll get informational message in console, something like
+    
+    ```shell
+    Presentation  "presentation/index.html" is served at /presentation with masterKey=lol
+    Presentation  "presentations/presentation1/index.html" is served at /ololo with masterKey=lol
+    Presentation  "presentations/presentation2/index.html" is served at /lol with masterKey=lol
+    Presentation  "presentation/index.html" is served at /nyan with masterKey=lol
+    ```
+1. Open your presentation to
 
     `http://%%YOUR_HOST_GOES_HERE%%:3000/%%url%%/?master=%%MASTER_KEY_FROM_CONFIG_GOES_HERE%%`
-1. Viewers can connect at
+1. Viewers can connect to
 
     `http://%%YOUR_HOST_GOES_HERE%%:3000/%%url%%/`
 
