@@ -1,4 +1,7 @@
-var socket = io.connect('http://localhost' + location.pathname.replace(/\/$/, ''));
+/*global io:false */
+var ioUrl = 'http://localhost' + location.pathname.replace(/(^\/.*)\/$/, '$1');
+console.log(ioUrl);
+var socket = io.connect(ioUrl);
 var master = location.search.replace(/^.*master=([^&]*)$/, '$1');
 
 socket.on('connect', function () {
@@ -15,7 +18,7 @@ function addEvent(elem, event, fn) {
     if (elem.addEventListener) {
         elem.addEventListener(event, fn, false);
     } else {
-        elem.attachEvent("on" + event, function() {
+        elem.attachEvent('on' + event, function() {
             // set the this pointer same as addEventListener when fn is called
             return fn.call(elem, window.event);
         });

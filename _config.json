@@ -6,17 +6,17 @@
         },
         {
             "folder" : "presentations/presentation1",
-            "url"    : "ololo",
+            "url"    : "/ololo",
             "master" : "lol"
         },
         {
             "folder" : "presentations/presentation2",
-            "url"    : "lol",
+            "url"    : "/lol",
             "master" : "lol"
         },
         {
             "folder" : "presentation",
-            "url"    : "nyan",
+            "url"    : "/nyan",
             "master" : "lol",
             "file"   : "index.html"
         }
