@@ -1,4 +1,4 @@
-var socket = io.connect('http://localhost');
+var socket = io.connect('http://localhost' + location.pathname.replace(/\/$/, ''));
 var master = location.search.replace(/^.*master=([^&]*)$/, '$1');
 
 socket.on('connect', function () {

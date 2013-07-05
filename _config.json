@@ -1,0 +1,24 @@
+{
+    "presentations" : [
+        {
+            "folder" : "presentation",
+            "master" : "lol"
+        },
+        {
+            "folder" : "presentations/presentation1",
+            "url"    : "ololo",
+            "master" : "lol"
+        },
+        {
+            "folder" : "presentations/presentation2",
+            "url"    : "lol",
+            "master" : "lol"
+        },
+        {
+            "folder" : "presentation",
+            "url"    : "nyan",
+            "master" : "lol",
+            "file"   : "index.html"
+        }
+    ]
+}

@@ -11,6 +11,7 @@ DEPENDENCIES
 * [node.js][2]
 * [Express][3]
 * [socket.io][4]
+* [iconv-lite][5]
 
 INSTALLATION
 ------------
@@ -23,6 +24,8 @@ Clone the Github repository. Update the vendor libraries:
 
 USAGE
 -----
+
+## Single presentation mode
 
 1. Put your presentation into `presentation` folder
 1. Append
@@ -52,9 +55,60 @@ USAGE
 
     `http://%%YOUR_HOST_GOES_HERE%%:3000/`
 
-## Versions
-### 0.1.0
+## Multiple presentations mode
+
+1. Put your presentations in some folders in shower-server folder
+1. Put `config.json` file in the root of shower-server folder
+    E.g.:
+
+    {
+        "presentations" : [
+            {
+                "folder" : "presentation",
+                "master" : "lol"
+            },
+            {
+                "folder" : "presentations/presentation1",
+                "url"    : "ololo",
+                "master" : "lol"
+            },
+            {
+                "folder" : "presentations/presentation2",
+                "url"    : "lol",
+                "master" : "lol"
+            },
+            {
+                "folder" : "presentation",
+                "url"    : "nyan",
+                "master" : "lol",
+                "file"   : "index.html"
+            }
+        ]
+    }
+
++ `url` defaults to `folder`
+- `file` defaults to `index.html`
+- `master` may be absent, it will be generated for you
+
+Messages are broadcated by `url`, so the same presentation may be shown by several masters
+
+1. Run `./bin/shower-server`
+
+1. Open your presentation at
+
+    `http://%%YOUR_HOST_GOES_HERE%%:3000/%%url%%/?master=%%MASTER_KEY_FROM_CONFIG_GOES_HERE%%`
+1. Viewers can connect at
+
+    `http://%%YOUR_HOST_GOES_HERE%%:3000/%%url%%/`
+
+bla-bla-bla...
+
+# Versions
+## 0.1.0
 Proof of concept
+
+### 0.1.1
+Multiple-presentations dirty proof of concept
 
 LICENSE
 -------
@@ -67,3 +121,4 @@ that was distributed with this source code.
 [2]: http://nodejs.org/
 [3]: http://expressjs.com/
 [4]: https://github.com/learnboost/socket.io
+[5]: https://github.com/ashtuchkin/iconv-lite
