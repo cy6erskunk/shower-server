@@ -11,6 +11,8 @@ var fs = require('fs'),
     presentations,
     presentationsSockets = {};
 
+require('colors');
+
 io.set('log level', 2);
 
 var file = {};
@@ -84,16 +86,17 @@ presentations.forEach(function (presentation) {
     });
 
     if (presentations.length === 1) {
-        console.log('path: "' + url + '"');
-        console.log('############################################');
-        console.log('#                                          #');
-        console.log('#              YOUR MASTER KEY:            #');
-        console.log('#                                          #');
-        console.log('# ' + masterKey + ' #');
-        console.log('#                                          #');
-        console.log('############################################');
+        console.log('path: '.green + url.yellow + '\n');
+        console.log('############################################'.green);
+        console.log('#                                          #'.green);
+        console.log('#              '.green + 'YOUR MASTER KEY:'.yellow + '            #'.green);
+        console.log('#                                          #'.green);
+        console.log('# '.green + masterKey.red + ' #'.green);
+        console.log('#                                          #'.green);
+        console.log('############################################'.green);
     } else {
-        console.log('Presentation  "' + folder + '/' + file + '" is served at ' + url + ' with masterKey=' + masterKey);
+        console.log('Presentation '.green + (folder + '/' + file).yellow +
+            ' is served at '.green + url.yellow + ' with masterKey '.green + masterKey.red);
     }
 
     presentationsSockets[url] = (url === '/' ? io : io.of(url))
@@ -103,7 +106,7 @@ presentations.forEach(function (presentation) {
 
             socket
                 .on('setMaster', function (data) {
-                    console.log((data === _masterKey) + ' MASTER connected!');
+                    console.log((data === _masterKey).toString().red + ' MASTER connected!'.green);
                     socket.set('_masterKey', (data === _masterKey));
                     // Update viewer's hash on connect
                     if ((data !== _masterKey) && currentHash) {
@@ -115,7 +118,7 @@ presentations.forEach(function (presentation) {
                     socket.get('_masterKey', function (err, _masterKey) {
                         if (_masterKey) {
                             currentHash = data.hash;
-                            console.log('BROADCAST!');
+                            console.log('BROADCAST!'.green);
                             presentationsSockets[_url].emit('hashchange', data.hash);
                         }
                     });
