@@ -1,6 +1,5 @@
 /*global io:false */
 var ioUrl = 'http://localhost' + location.pathname.replace(/(^\/.*)\/$/, '$1');
-console.log(ioUrl);
 var socket = io.connect(ioUrl);
 var master = location.search.replace(/^.*master=([^&]*)$/, '$1');
 
