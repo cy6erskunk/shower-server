@@ -92,7 +92,14 @@ USAGE
     - `master` may be absent, masterKey will be generated for you
 
     Messages are broadcated by `url`, so the same presentation may be shown by several masters
+1. Append
 
+    ```html
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript" src="/client.js"></script>
+    ```
+
+    to the `head` section in each of your presentations
 1. Run `./bin/shower-server`
     You'll get informational message in console, something like
     
