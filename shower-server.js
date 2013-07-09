@@ -8,7 +8,7 @@ var fs = require('fs'),
     config,
     configFile = 'config.json',
     currentHash = null,
-    presentations,
+    presentations = [{}],
     presentationsSockets = {};
 
 require('colors');
@@ -62,23 +62,28 @@ if (fs.existsSync(configFile)) {
 
 if (config && config.presentations && Array.isArray(config.presentations)) {
     presentations = config.presentations;
-} else {
-
-    presentations = [{
-        'folder' : 'presentation',
-        'url'    : '/',
-        'master' : getRandomMasterKey(),
-        'file'   : 'index.html'
-    }];
-
 }
 
+// fill presentations with default values, when needed
+presentations = presentations.map(function (presentation) {
+    !presentation.folder && (presentation.folder = 'presentation');
+    if (presentations.length === 1) {
+        presentation.url = '/';
+    } else {
+        !presentation.url && (presentation.url = '/' + presentation.folder);
+        (/\/.*\/$/).test(presentation.url) && presentation.url.replace(/\/$/,'');
+    }
+    !presentation.file && (presentation.file = 'index.html');
+    !presentation.master && (presentation.master = getRandomMasterKey());
+
+    return presentation;
+});
 
 presentations.forEach(function (presentation) {
     var folder = presentation.folder,
-        url = presentation.url || '/' + presentation.folder,
-        file = presentation.file || 'index.html',
-        masterKey = presentation.master || getRandomMasterKey();
+        url = presentation.url,
+        file = presentation.file,
+        masterKey = presentation.master;
 
     app.use(url, express.static(__dirname + '/' + folder));
     app.get(url, function (req, res) {
@@ -127,7 +132,25 @@ presentations.forEach(function (presentation) {
 
 });
 
+if (presentations.length > 1) {
+    app.get('/', function (req, res) {
+        var index = '<!DOCTYPE html>';
 
+        index += '<html>';
+        index += '<head><title>Presentations list</title><meta encoding="utf8"/></head>';
+        index += '<body>';
+        index += '<h1>Presentations List</h1>';
+        index += '<ul>';
+        index += presentations.reduce(function (prev, current) {
+            return prev + '<li><a href="' + current.url + '/">' + current.folder + '</a></li>';
+        }, '');
+        index += '</ul>';
+        index += '</body>';
+        index += '</html>';
+
+        res.send(index);
+    });
+}
 app.get('/client.js', function (req, res) {
     res.sendfile(__dirname + '/shower-server.client.js');
 });
