@@ -1,19 +1,30 @@
 var fs = require('fs'),
+    extend = require('extend'),
     iconv = require('iconv-lite'),
     express = require('express'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
     crypto = require('crypto'),
-    config,
+    config = {},
+    defaultConfig,
     configFile = 'config.json',
+    clientJsFile = 'shower-server.client.js',
+    clientJS,
     currentHash = null,
-    presentations = [{}],
+    presentations,
     presentationsSockets = {};
 
 require('colors');
 
 io.set('log level', 2);
+
+defaultConfig = {
+    host : 'localhost',
+    port : 3000,
+    singleMode : true,
+    presentations : [{}]
+};
 
 var file = {};
 
@@ -57,17 +68,30 @@ file.readJSON = function(filepath, options) {
 };
 
 if (fs.existsSync(configFile)) {
-    config = file.readJSON(configFile);
+    config = file.readJSON(configFile) || {};
 }
 
-if (config && config.presentations && Array.isArray(config.presentations)) {
+if (config.presentations && Array.isArray(config.presentations)) {
     presentations = config.presentations;
 }
+config = extend({}, defaultConfig, config);
+
+clientJS = file.read(clientJsFile) || console.error('Could not read client js file!');
+
+try {
+    fs.writeFileSync('_' + clientJsFile, clientJS.replace('%HOST%', config.host));
+} catch (err) {
+    // @TODO: error handling
+    throw err;
+}
+
+console.log('Wrote client js file!'.green);
+
 
 // fill presentations with default values, when needed
 presentations = presentations.map(function (presentation) {
     !presentation.folder && (presentation.folder = 'presentation');
-    if (presentations.length === 1) {
+    if (config.singleMode && presentations.length === 1) {
         presentation.url = '/';
     } else {
         !presentation.url && (presentation.url = '/' + presentation.folder);
@@ -90,7 +114,7 @@ presentations.forEach(function (presentation) {
         res.sendfile(__dirname + '/' + folder + '/' + file);
     });
 
-    if (presentations.length === 1) {
+    if (config.singleMode && presentations.length === 1) {
         console.log('path: '.green + url.yellow + '\n');
         console.log('############################################'.green);
         console.log('#                                          #'.green);
@@ -152,10 +176,10 @@ if (presentations.length > 1) {
     });
 }
 app.get('/client.js', function (req, res) {
-    res.sendfile(__dirname + '/shower-server.client.js');
+    res.sendfile(__dirname + '/_shower-server.client.js');
 });
 
-server.listen(3000);
+server.listen(config.port, config.host);
 
 function getRandomMasterKey() {
     var shasum = crypto.createHash('sha1');
