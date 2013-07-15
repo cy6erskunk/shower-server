@@ -1,0 +1,21 @@
+.commentsForm
+{
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 200px;
+    background-color: royalblue;
+}
+.nameInput {
+    width: 90%;
+}
+.commentText {
+    width: 90%;
+    height: 100px;
+}
+.commentPostButton {
+    width: 90%;
+    display: block;
+    margin: 0 auto;
+}

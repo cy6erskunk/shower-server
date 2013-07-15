@@ -8,7 +8,7 @@ var extend = require('extend'),
     config = {},
     defaultConfig,
     configFile = 'config.json',
-    clientJsFile = 'shower-server.client.js',
+    clientJsFile = 'shower-server.js',
     currentHash = null,
     presentations,
     presentationsSockets = {};
@@ -40,7 +40,10 @@ if (presentations.length > 1) {
 }
 
 app.get('/client.js', function (req, res) {
-    res.sendfile(__dirname + '/_' + clientJsFile);
+    res.sendfile(__dirname + '/client/_' + clientJsFile);
+});
+app.get('/client.css', function (req, res) {
+    res.sendfile(__dirname + '/client/shower-server.css');
 });
 
 server.listen(config.port, config.host);
@@ -50,8 +53,8 @@ server.listen(config.port, config.host);
 function prepareClientJSFile (clientJsFile) {
     var clientJS;
 
-    clientJS = file.read(clientJsFile) || console.error('Could not read client js file!');
-    file.write('_' + clientJsFile, clientJS.replace('%HOST%', config.host));
+    clientJS = file.read('client/' + clientJsFile) || console.error('Could not read client js file!');
+    file.write('client/' + '_' + clientJsFile, clientJS.replace('%HOST%', config.host));
     console.log('Wrote client js file!'.green);
 }
 
@@ -118,6 +121,9 @@ function initPresentations(presentations) {
                                 presentationsSockets[_url].emit('hashchange', data.hash);
                             }
                         });
+                    })
+                    .on('comment', function (data) {
+                        console.log('comment from '.yellow + data.name.green + ' ' + data.comment.blue);
                     });
             });
     });

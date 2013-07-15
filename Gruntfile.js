@@ -6,7 +6,7 @@ module.exports = function (grunt) {
         nodemon: {
             dev: {
                 options: {
-                    ignoredFiles: ['README.md', 'node_modules/**', '_shower-server.client.js']
+                    ignoredFiles: ['README.md', 'node_modules/**', 'client/_shower-server.js']
                 }
             }
         },
