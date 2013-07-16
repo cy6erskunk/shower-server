@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta encoding="utf8"/>
+    <title>Presentations list</title>
+</head>
+<body>
+    <h1>Presentations List</h1>
+    <ul>
+    {{#each presentations}}
+        <li><a href="{{url}}/">{{folder}}</a></li>
+    {{/each}}
+    </ul>
+</body>
+</html>

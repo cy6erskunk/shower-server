@@ -1,15 +1,13 @@
-var extend = require('extend'),
-    file = require('./utils/file'),
+var utils = require('./utils/utils'),
     express = require('express'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
-    crypto = require('crypto'),
+    hbs = require('hbs'),
     config = {},
-    defaultConfig,
-    configFile = 'config.json',
+    singleMode = false,
+    clientJS,
     clientJsFile = 'shower-server.client.js',
-    currentHash = null,
     presentations,
     presentationsSockets = {};
 
@@ -17,55 +15,40 @@ require('colors');
 
 io.set('log level', 2);
 
-defaultConfig = {
-    host : 'localhost',
-    port : 3000,
-    singleMode : true,
-    presentations : [{}]
-};
+config = require('./config');
 
-config = file.readJSON(configFile) || {};
-
-if (config.presentations && Array.isArray(config.presentations)) {
-    presentations = config.presentations;
-}
-config = extend({}, defaultConfig, config);
-
-prepareClientJSFile(clientJsFile);
-
-presentations = initPresentations(presentations);
-
-if (presentations.length > 1) {
-    addPresentationListPage(presentations);
+presentations = initPresentations(config.presentations);
+if (!singleMode) {
+    app.get('/', function (req, res) {
+        res.render('presentations.hbs', { presentations: presentations });
+    });
 }
 
+clientJS = utils.readFile(clientJsFile).replace('%HOST%', config.host);
 app.get('/client.js', function (req, res) {
-    res.sendfile(__dirname + '/_' + clientJsFile);
+    res.setHeader('content-type', 'application/javascript');
+    res.send(clientJS);
 });
 
 server.listen(config.port, config.host);
 
 //======================================
 
-function prepareClientJSFile (clientJsFile) {
-    var clientJS;
-
-    clientJS = file.read(clientJsFile) || console.error('Could not read client js file!');
-    file.write('_' + clientJsFile, clientJS.replace('%HOST%', config.host));
-    console.log('Wrote client js file!'.green);
-}
-
 function initPresentations(presentations) {
+    var currentHash = null;
+
+    singleMode = !presentations || presentations.length === 1;
+
     presentations = presentations.map(function (presentation) {
-        !presentation.folder && (presentation.folder = 'presentation');
-        if (config.singleMode && presentations.length === 1) {
-            presentation.url = '/';
-        } else {
-            !presentation.url && (presentation.url = '/' + presentation.folder);
-            (/\/.*\/$/).test(presentation.url) && presentation.url.replace(/\/$/,'');
-        }
-        !presentation.file && (presentation.file = 'index.html');
-        !presentation.master && (presentation.master = getRandomMasterKey());
+        presentation = require('extend')({
+                folder: 'presentation',
+                file: 'index.html',
+                master: utils.getRandomMasterKey()
+            }, presentation);
+
+        presentation.url = singleMode ?
+            '/' :
+            (presentation.url || '/' + presentation.folder).replace(/(^.+)\/$/,'$1');
 
         return presentation;
     });
@@ -81,19 +64,8 @@ function initPresentations(presentations) {
             res.sendfile(__dirname + '/' + folder + '/' + file);
         });
 
-        if (config.singleMode && presentations.length === 1) {
-            console.log('path: '.green + url.yellow + '\n');
-            console.log('############################################'.green);
-            console.log('#                                          #'.green);
-            console.log('#              '.green + 'YOUR MASTER KEY:'.yellow + '            #'.green);
-            console.log('#                                          #'.green);
-            console.log('# '.green + masterKey.red + ' #'.green);
-            console.log('#                                          #'.green);
-            console.log('############################################'.green);
-        } else {
-            console.log('Presentation '.green + (folder + '/' + file).yellow +
-                ' is served at '.green + url.yellow + ' with masterKey '.green + masterKey.red);
-        }
+        console.log('Presentation '.green + (folder + '/' + file).yellow +
+            ' is served at '.green + url.yellow + ' with masterKey '.green + masterKey.red);
 
         presentationsSockets[url] = (url === '/' ? io : io.of(url))
             .on('connection', function (socket) {
@@ -123,35 +95,4 @@ function initPresentations(presentations) {
     });
 
     return presentations;
-}
-
-function addPresentationListPage (presentations) {
-    app.get('/', function (req, res) {
-        var index = '<!DOCTYPE html>';
-
-        index += '<html>';
-        index += '<head><title>Presentations list</title><meta encoding="utf8"/></head>';
-        index += '<body>';
-        index += '<h1>Presentations List</h1>';
-        index += '<ul>';
-        index += presentations.reduce(function (prev, current) {
-            return prev + '<li><a href="' + current.url + '/">' + current.folder + '</a></li>';
-        }, '');
-        index += '</ul>';
-        index += '</body>';
-        index += '</html>';
-
-        res.send(index);
-    });
-}
-
-function getRandomMasterKey() {
-    var shasum = crypto.createHash('sha1');
-    var secret = process.argv[2] ? process.argv[2] : [
-        Math.ceil(Math.random() * 1000),
-        (new Date()).getTime(),
-        Math.ceil(Math.random() * 1000)
-    ].join('');
-    shasum.update(secret);
-    return shasum.digest('hex');
 }

@@ -27,12 +27,14 @@ USAGE
 
 ## Single presentation mode
 
+This mode is enabled when `presentations` section in `config.json` is empty or contains only one presentation description
+
 1. Put your presentation into `presentation` folder
 1. Append
 
     ```html
     <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="/client.js"></script>
+    <script src="/client.js"></script>
     ```
 
     to the `head` of your presentation `index.html`
@@ -40,27 +42,21 @@ USAGE
     You'll get a message in console
 
     ```
-    ############################################
-    #                                          #
-    #              YOUR MASTER KEY:            #
-    #                                          #
-    # 403926033d001b5279df37cbbe5287b7c7c267fa #
-    #                                          #
-    ############################################
+    Presentation  "presentation/index.html" is served at / with masterKey=403926033d001b5279df37cbbe5287b7c7c267fa
     ```
 1. Open your presentation at
 
-    `http://%%YOUR_HOST_GOES_HERE%%:3000/?master=%%KEY_FROM_PREVIOUS_STEP_GOES_HERE%%`
+    `http://%%HOST%%:%%PORT%%/?master=%%KEY_FROM_PREVIOUS_STEP_GOES_HERE%%`
 1. Viewers can connect at
 
-    `http://%%YOUR_HOST_GOES_HERE%%:3000/`
+    `http://%%HOST%%:%%PORT%%/`
 
 ## Multiple presentations mode
 
 1. Put your presentations in some folders in shower-server folder
 1. Put `config.json` file in the root of shower-server folder
     E.g.:
-    
+
     ```json
     {
         "presentations" : [
@@ -102,7 +98,7 @@ USAGE
     to the `head` section in each of your presentations
 1. Run `./bin/shower-server`
     You'll get informational message in console, something like
-    
+
     ```shell
     Presentation  "presentation/index.html" is served at /presentation with masterKey=lol
     Presentation  "presentations/presentation1/index.html" is served at /ololo with masterKey=lol

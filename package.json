@@ -8,7 +8,8 @@
     "socket.io": "~0.9.16",
     "iconv-lite": "~0.2.10",
     "colors": "~0.6.0-1",
-    "extend": "~1.1.3"
+    "extend": "~1.1.3",
+    "hbs": "~2.3.0"
   },
   "author": "Igor Shevchenko <cyberskunk@yandex.ru>",
   "license": "MIT",
