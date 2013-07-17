@@ -73,9 +73,10 @@ function initPresentations(presentations) {
                     _url = url;
 
                 socket
-                    .on('setMaster', function (data) {
+                    .on('setMaster', function (data, sendMasterBack) {
                         console.log((data === _masterKey).toString().red + ' MASTER connected!'.green);
                         socket.set('_masterKey', (data === _masterKey));
+                        sendMasterBack(data === _masterKey);
                         // Update viewer's hash on connect
                         if ((data !== _masterKey) && currentHash) {
                             socket.emit('hashchange', currentHash);
