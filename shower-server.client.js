@@ -1,36 +1,41 @@
 /*global io:false */
-var ioUrl = 'http://%HOST%' + location.pathname.replace(/(^\/.*)\/$/, '$1');
-var socket = io.connect(ioUrl);
-var master = location.search.replace(/^.*master=([^&]*)$/, '$1');
+(function (){
+    var ioUrl = 'http://%HOST%' + location.pathname.replace(/(^\/.*)\/$/, '$1');
+    var socket = io.connect(ioUrl);
+    var master = location.search.replace(/^.*master=([^&]*)$/, '$1');
 
-socket.on('connect', function () {
-    socket.emit('setMaster', master, function (data) {
-        master = data;
-        // only master emits hashchanges
-        if (master) {
-            addEvent(window, 'hashchange', function () {
-                socket.emit('hashchange', {hash: location.hash});
+    socket.on('connect', function () {
+        socket.emit('setMaster', master, function (data) {
+            master = data;
+            // only master emits hashchanges
+            if (master) {
+                addEvent(window, 'hashchange', browserHashchangeHandler);
+            }
+        });
+    });
+
+    // master doesn't subscribe to hashchanges
+    if (!master) {
+        socket.on('hashchange', socketHashchangeHandler);
+    }
+
+    function addEvent(elem, event, fn) {
+        if (elem.addEventListener) {
+            elem.addEventListener(event, fn, false);
+        } else {
+            elem.attachEvent('on' + event, function() {
+                // set the this pointer same as addEventListener when fn is called
+                return fn.call(elem, window.event);
             });
         }
-    });
-});
+    }
 
-// master doesn't subscribe to hashchanges
-if (!master) {
-    socket.on('hashchange', function (data) {
+    function socketHashchangeHandler (data) {
         console.log(data);
         location.hash = data;
-    });
-}
-
-function addEvent(elem, event, fn) {
-    if (elem.addEventListener) {
-        elem.addEventListener(event, fn, false);
-    } else {
-        elem.attachEvent('on' + event, function() {
-            // set the this pointer same as addEventListener when fn is called
-            return fn.call(elem, window.event);
-        });
     }
-}
 
+    function browserHashchangeHandler () {
+        socket.emit('hashchange', {hash: location.hash});
+    }
+})();
