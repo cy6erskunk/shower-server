@@ -6,6 +6,7 @@ var master = location.search.replace(/^.*master=([^&]*)$/, '$1');
 socket.on('connect', function () {
     socket.emit('setMaster', master, function (data) {
         master = data;
+        // only master emits hashchanges
         if (master) {
             addEvent(window, 'hashchange', function () {
                 socket.emit('hashchange', {hash: location.hash});
@@ -14,11 +15,13 @@ socket.on('connect', function () {
     });
 });
 
-socket.on('hashchange', function (data) {
-    console.log(data);
-    location.hash = data;
-});
-
+// master doesn't subscribe to hashchanges
+if (!master) {
+    socket.on('hashchange', function (data) {
+        console.log(data);
+        location.hash = data;
+    });
+}
 
 function addEvent(elem, event, fn) {
     if (elem.addEventListener) {
