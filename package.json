@@ -18,7 +18,7 @@
     "grunt": "~0.4.1",
     "matchdep": "~0.1.2",
     "grunt-open": "~0.2.0",
-    "grunt-nodemon": "0.0.7",
+    "grunt-nodemon": "0.0.8",
     "grunt-concurrent": "~0.3.0"
   }
 }
