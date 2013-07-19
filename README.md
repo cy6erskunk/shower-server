@@ -1,64 +1,46 @@
 [![Dependency Status](https://gemnasium.com/cy6erskunk/shower-server.png)](https://gemnasium.com/cy6erskunk/shower-server)
 
-README
+shower-server
 ======
 
-`shower-server` is a simple server allowing multiple clients to view [Shower][1] slides in sync with presenter.
+`shower-server` is a [node.js][2]-based server allowing multiple clients to view [Shower][1] slides in sync with presenter.
 
-DEPENDENCIES
-------------
+Kickstart
+---------
+At the moment three steps are required to start showing presentation
 
-* [node.js][2]
-* [Express][3]
-* [socket.io][4]
-* [iconv-lite][5]
+It is assumed, that machine you're installing `shower-server` on is called `example.com` and
+you have `node` and `npm` installed.
 
-INSTALLATION
-------------
+1. install `shower-server` by running
 
-Clone the Github repository. Update the vendor libraries:
+        $> git clone git://github.com/cy6erskunk/shower-server.git && cd shower-server && npm install
 
-    $> git clone git://github.com/cy6erskunk/shower-server.git
-    $> npm install
+2. copy your Shower presentation to `presentation` folder (presentation file along with theme stuff)
+3. start `shower-server` by running `./bin/shower-server` and remember masterKey it shows in the console:
 
-
-USAGE
------
-
-## Single presentation mode
-
-This mode is enabled when `presentations` section in `config.json` is empty or contains only one presentation description
-
-1. Put your presentation into `presentation` folder
-1. Append
-
-    ```html
-    <script src="/socket.io/socket.io.js"></script>
-    <script src="/client.js"></script>
-    ```
-
-    to the `head` of your presentation `index.html`
-1. Run `./bin/shower-server`
-    You'll get a message in console
-
-    ```
+    ```shell
     Presentation  "presentation/index.html" is served at / with masterKey=403926033d001b5279df37cbbe5287b7c7c267fa
     ```
-1. Open your presentation at
 
-    `http://%%HOST%%:%%PORT%%/?master=%%KEY_FROM_PREVIOUS_STEP_GOES_HERE%%`
-1. Viewers can connect at
+You can now open your presentation in browser (default port is `8080`, remember to add `master` parameter to the url
+with `masterKey` value from the step 3 to let `shower-server` know that you're presenter, not a viever, e.g.:
 
-    `http://%%HOST%%:%%PORT%%/`
+    http://example.com:8080/?master=403926033d001b5279df37cbbe5287b7c7c267fa
 
-## Multiple presentations mode
+Viewers can simply open the presentation URL (in the example earlier it would be `http://example.com:8080/`)
+and have slides changing after the presenter.
 
-1. Put your presentations in some folders in shower-server folder
-1. Put `config.json` file in the root of shower-server folder
-    E.g.:
+CONFIG
+------
+Filename: `config.json`
+
+Sample config:
 
     ```json
     {
+        "host" : "",
+        "port" : 8080,
         "presentations" : [
             {
                 "folder" : "presentation",
@@ -72,7 +54,6 @@ This mode is enabled when `presentations` section in `config.json` is empty or c
             {
                 "folder" : "presentations/presentation2",
                 "url"    : "lol",
-                "master" : "lol"
             },
             {
                 "folder" : "presentation",
@@ -83,43 +64,78 @@ This mode is enabled when `presentations` section in `config.json` is empty or c
         ]
     }
     ```
-    + `url` defaults to `folder`
-    - `file` defaults to `index.html`
-    - `master` may be absent, masterKey will be generated for you
+## Properties:
 
-    Messages are broadcated by `url`, so the same presentation may be shown by several masters
-1. Append
+### host
+Type: `String`
 
-    ```html
-    <script src="/socket.io/socket.io.js"></script>
-    <script type="text/javascript" src="/client.js"></script>
-    ```
+Default: `''`
 
-    to the `head` section in each of your presentations
-1. Run `./bin/shower-server`
-    You'll get informational message in console, something like
+Hostname. Default means to accept connections directed to any IPv4 address
 
-    ```shell
-    Presentation  "presentation/index.html" is served at /presentation with masterKey=lol
-    Presentation  "presentations/presentation1/index.html" is served at /ololo with masterKey=lol
-    Presentation  "presentations/presentation2/index.html" is served at /lol with masterKey=lol
-    Presentation  "presentation/index.html" is served at /nyan with masterKey=lol
-    ```
-1. Open your presentation to
+### port
+Type: `Number`
 
-    `http://%%YOUR_HOST_GOES_HERE%%:3000/%%url%%/?master=%%MASTER_KEY_FROM_CONFIG_GOES_HERE%%`
-1. Viewers can connect to
+Default: `8080`
 
-    `http://%%YOUR_HOST_GOES_HERE%%:3000/%%url%%/`
+### presentations
+Type: `Array`
 
-bla-bla-bla...
+Optional. When absent, it's assumed that presentation is server at `/` from `./presentation/index.html`
+with auto-generated `master-key` (so-called `singleMode`).
+
+##### `singleMode`
+This mode is enabled when there's no `presentations` array or there's only one object in it.
+`presentation.url` is ignored and server serves presentation at `/`. Other options perform in usual way.
+
+### presentation
+Type: `Object`
+
+Description of presentation: folder, file, url, masterKey
+
+#### presentation.folder
+Type: `String`
+
+Default (in `singleMode`): `'presentation'`
+
+Optional in `singleMode`.
+
+Path to folder containing presentation, relative to shower-server folder.
+
+#### presentation.master
+Type: `String`
+
+Optional. String to pass as `GET` parameter to indicate presenter connection.
+In case of absence is auto-generated and its value is shown in console when server starts.
+
+#### presentation.url
+Type: `String`
+
+Default: `'/'` in `singleMode`, `'/' + presentation.folder + '/'` otherwise
+
+Optional.
+
+#### presentation.file
+Type: `String`
+
+Default: `'index.html'`
+
+Optional.
+
+DEPENDENCIES
+------------
+
+* [node.js][2]
+* [Express][3]
+* [socket.io][4]
+* [iconv-lite][5]
 
 # Versions
-## 0.1.0
-Proof of concept
-
 ### 0.1.1
 Multiple-presentations dirty proof of concept
+
+### 0.1.0
+Proof of concept
 
 LICENSE
 -------

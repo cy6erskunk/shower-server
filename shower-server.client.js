@@ -1,23 +1,20 @@
 /*global io:false */
 (function (){
-    var ioUrl = 'http://%HOST%' + location.pathname.replace(/(^\/.*)\/$/, '$1');
-    var socket = io.connect(ioUrl);
+    var socket = io.connect('http://' + location.hostname + location.pathname.replace(/(^\/.*)\/$/, '$1'));
     var master = location.search.replace(/^.*master=([^&]*)$/, '$1');
 
     socket.on('connect', function () {
         socket.emit('setMaster', master, function (data) {
             master = data;
-            // only master emits hashchanges
             if (master) {
+                // only master emits hashchanges
                 addEvent(window, 'hashchange', browserHashchangeHandler);
+            } else {
+                // master doesn't subscribe to hashchanges
+                socket.on('hashchange', socketHashchangeHandler);
             }
         });
     });
-
-    // master doesn't subscribe to hashchanges
-    if (!master) {
-        socket.on('hashchange', socketHashchangeHandler);
-    }
 
     function addEvent(elem, event, fn) {
         if (elem.addEventListener) {
@@ -31,7 +28,6 @@
     }
 
     function socketHashchangeHandler (data) {
-        console.log(data);
         location.hash = data;
     }
 

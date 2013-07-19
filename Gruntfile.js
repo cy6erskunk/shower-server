@@ -12,7 +12,7 @@ module.exports = function (grunt) {
         },
         open: {
             dist: {
-                path: 'http://localhost:3000/'
+                path: 'http://localhost:' + (grunt.file.readJSON('config.json')).port + '/'
             }
         },
         concurrent: {
