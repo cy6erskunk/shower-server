@@ -1,6 +1,6 @@
 {
   "name": "shower-server",
-  "main": "shower-server.js",
+  "main": "lib/shower-server.js",
   "description": "simple Shower server allowing multiple clients view slides in sync with presenter",
   "version": "0.1.1",
   "dependencies": {
@@ -19,6 +19,7 @@
     "matchdep": "~0.1.2",
     "grunt-open": "~0.2.0",
     "grunt-nodemon": "0.0.8",
-    "grunt-concurrent": "~0.3.0"
+    "grunt-concurrent": "~0.3.0",
+    "nodeunit": "~0.8.1"
   }
 }
