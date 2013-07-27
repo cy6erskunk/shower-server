@@ -1,6 +1,9 @@
 {
   "name": "shower-server",
   "main": "server.js",
+  "scripts": {
+    "test": "nodeunit ./tests"
+  },
   "description": "simple Shower server allowing multiple clients view slides in sync with presenter",
   "version": "0.1.1",
   "dependencies": {
