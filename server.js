@@ -3,7 +3,6 @@ var showerServer = require('./lib/shower-server'),
     app = express(),
     server = require('http').createServer(app),
     io = require('socket.io').listen(server),
-    hbs = require('hbs'),
     config = {},
     presentations;
 

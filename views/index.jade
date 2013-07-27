@@ -1,0 +1,12 @@
+!!!
+html
+    head
+        title Presentations list
+        meta(encoding="utf8")
+
+    body
+        h1 Presentations List
+        ul
+            each presentation in presentations
+                li
+                    a(href= presentation.url + "/")= presentation.folder
