@@ -1,0 +1,4 @@
+#!/bin/sh
+NPM=$(which npm)
+
+npm test
