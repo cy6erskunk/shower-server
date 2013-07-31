@@ -131,6 +131,11 @@ DEPENDENCIES
 * [iconv-lite][5]
 
 # Versions
+### 0.2.0
+ - single/multi presentation modes
+ - no manual editing of presentaion html file to include scripts
+ - config file required
+
 ### 0.1.1
 Multiple-presentations dirty proof of concept
 
