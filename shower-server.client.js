@@ -38,22 +38,22 @@
         if (elem.addEventListener) {
             elem.addEventListener(event, fn, false);
         } else {
-            elem.attachEvent('on' + event, function() {
+            elem.attachEvent('on' + event, function () {
                 // set the this pointer same as addEventListener when fn is called
                 return fn.call(elem, window.event);
             });
         }
     }
 
-    function socketHashchangeHandler (data) {
+    function socketHashchangeHandler(data) {
         location.hash = data;
     }
 
-    function browserHashchangeHandler () {
-        socket.emit('hashchange', {hash: location.hash});
+    function browserHashchangeHandler() {
+        socket.emit('hashchange', { hash: location.hash });
     }
 
-    function setMasterCallback (data) {
+    function setMasterCallback(data) {
         master = data;
         if (master) {
             // only master emits hashchanges
