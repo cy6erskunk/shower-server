@@ -64,36 +64,36 @@ Sample config:
         ]
     }
     ```
-## Properties:
+### Properties:
 
-### host
+#### host
 Type: `String`
 
 Default: `''`
 
 Hostname. Default means to accept connections directed to any IPv4 address
 
-### port
+#### port
 Type: `Number`
 
 Default: `8080`
 
-### presentations
+#### presentations
 Type: `Array`
 
 Optional. When absent, it's assumed that presentation is server at `/` from `./presentation/index.html`
 with auto-generated `master-key` (so-called `singleMode`).
 
-##### `singleMode`
+###### `singleMode`
 This mode is enabled when there's no `presentations` array or there's only one object in it.
 `presentation.url` is ignored and server serves presentation at `/`. Other options perform in usual way.
 
-### presentation
+#### presentation
 Type: `Object`
 
 Description of presentation: folder, file, url, masterKey
 
-#### presentation.folder
+##### presentation.folder
 Type: `String`
 
 Default (in `singleMode`): `'presentation'`
@@ -102,25 +102,36 @@ Optional in `singleMode`.
 
 Path to folder containing presentation, relative to shower-server folder.
 
-#### presentation.master
+##### presentation.master
 Type: `String`
 
 Optional. String to pass as `GET` parameter to indicate presenter connection.
 In case of absence is auto-generated and its value is shown in console when server starts.
 
-#### presentation.url
+##### presentation.url
 Type: `String`
 
 Default: `'/'` in `singleMode`, `'/' + presentation.folder + '/'` otherwise
 
 Optional.
 
-#### presentation.file
+##### presentation.file
 Type: `String`
 
 Default: `'index.html'`
 
 Optional.
+
+Some features
+-------------
+### Disconnect button
+#### Master
+ - stops master from emitting page changes when disconnected
+ - send additional update when master connects back
+
+#### Viewer
+ - unsubscribe from updates when disconnected
+ - try to get current page when connecting back
 
 DEPENDENCIES
 ------------
@@ -131,6 +142,9 @@ DEPENDENCIES
 * [iconv-lite][5]
 
 # Versions
+### 0.2.1
+ - 'disconnect' button added
+
 ### 0.2.0
  - single/multi presentation modes
  - no manual editing of presentaion html file to include scripts
