@@ -5,7 +5,7 @@
     "test": "nodeunit ./tests"
   },
   "description": "simple Shower server allowing multiple clients view slides in sync with presenter",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "dependencies": {
     "express": "3.x",
     "socket.io": "~0.9.16",
