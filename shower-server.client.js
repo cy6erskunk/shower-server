@@ -66,9 +66,10 @@
     }
 
     function addDisconnectButton() {
-        var button = document.createElement('div');
+        var button = document.createElement('div'),
+            initialOpacity = 0.2;
 
-        button.className = 'changeUpdateStatus';
+        button.className = 'connectButton';
         button.innerHTML = 'Disconnect';
         button.style.position = 'fixed';
         button.style.left = '50px';
@@ -76,6 +77,8 @@
         button.style.zIndex = 100000;
         button.style.padding = '0.2em';
         button.style.border = '1px solid black';
+        button.style.borderRadius = '5px';
+        button.style.opacity = initialOpacity;
         button.style.backgroundColor = 'white';
         document.body.appendChild(button);
 
@@ -96,6 +99,14 @@
                     socket.emit('setMaster', queryParams.master, setMasterCallback);
                 }
             }
+        });
+
+        addEvent(button, 'mouseover', function () {
+            button.style.opacity = 1;
+        });
+
+        addEvent(button, 'mouseout', function () {
+            button.style.opacity = initialOpacity;
         });
     }
 
