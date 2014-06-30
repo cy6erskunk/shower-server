@@ -7,22 +7,22 @@
   "description": "simple Shower server allowing multiple clients view slides in sync with presenter",
   "version": "0.2.1",
   "dependencies": {
-    "express": "3.x",
-    "socket.io": "~0.9.16",
-    "iconv-lite": "~0.2.10",
-    "colors": "~0.6.0-1",
-    "extend": "~1.1.3",
-    "jade": "~0.34.1"
+    "colors": "~0.6.2",
+    "express": "^4.4.5",
+    "extend": "^1.2.1",
+    "iconv-lite": "^0.2.11",
+    "jade": "^1.3.1",
+    "socket.io": "^1.0.6"
   },
   "author": "Igor Shevchenko <cyberskunk@yandex.ru>",
   "license": "MIT",
   "readmeFilename": "README.md",
   "devDependencies": {
     "grunt": "~0.4.1",
-    "matchdep": "~0.1.2",
+    "matchdep": "~0.3.0",
     "grunt-open": "~0.2.0",
     "grunt-nodemon": "0.0.8",
     "grunt-concurrent": "~0.3.0",
-    "nodeunit": "~0.8.1"
+    "nodeunit": "~0.9.0"
   }
 }
