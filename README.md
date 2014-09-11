@@ -53,7 +53,7 @@ Sample config:
             },
             {
                 "folder" : "presentations/presentation2",
-                "url"    : "lol",
+                "url"    : "lol"
             },
             {
                 "folder" : "presentation",

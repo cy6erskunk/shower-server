@@ -8,8 +8,6 @@ var showerServer = require('./lib/shower-server'),
 
 require('colors');
 
-io.set('log level', 2);
-
 config = require('./config');
 
 presentations = showerServer.initPresentations(config.presentations);

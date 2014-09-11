@@ -1,6 +1,6 @@
 /*global io:false */
 (function (){
-    var socket = io.connect('http://' + location.hostname + location.pathname.replace(/(^\/.*)\/$/, '$1')),
+    var socket = io(location.pathname.replace(/(^\/.*)\/$/, '$1')),
         queryParams = (function () {
             return location.search.substring(1).split('&').map(function (pair) {
                 return pair.split('=');
