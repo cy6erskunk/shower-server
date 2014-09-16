@@ -5,6 +5,7 @@ module.exports = function (grunt) {
     grunt.initConfig({
         nodemon: {
             dev: {
+                script: 'server.js',
                 options: {
                     ignoredFiles: ['README.md', 'node_modules/**', '_shower-server.client.js']
                 }
@@ -16,7 +17,7 @@ module.exports = function (grunt) {
             }
         },
         concurrent: {
-            dev: ['nodemon', 'open'],
+            dev: ['nodemon:dev', 'open'],
             options: {
                 logConcurrentOutput: true
             }

@@ -10,7 +10,7 @@
     "colors": "~0.6.2",
     "express": "^4.4.5",
     "extend": "^1.2.1",
-    "iconv-lite": "^0.2.11",
+    "iconv-lite": "^0.4.4",
     "jade": "^1.3.1",
     "socket.io": "^1.1.0"
   },
@@ -18,11 +18,11 @@
   "license": "MIT",
   "readmeFilename": "README.md",
   "devDependencies": {
-    "grunt": "~0.4.1",
-    "matchdep": "~0.3.0",
-    "grunt-open": "~0.2.0",
-    "grunt-nodemon": "0.0.8",
+    "grunt": "^0.4.5",
     "grunt-concurrent": "~0.3.0",
+    "grunt-nodemon": "^0.3.0",
+    "grunt-open": "~0.2.0",
+    "matchdep": "~0.3.0",
     "nodeunit": "~0.9.0"
   }
 }
