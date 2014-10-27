@@ -4,6 +4,13 @@
   "scripts": {
     "test": "nodeunit ./tests"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cy6erskunk/shower-server.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cy6erskunk/shower-server/issues"
+  },
   "description": "simple Shower server allowing multiple clients view slides in sync with presenter",
   "version": "0.2.1",
   "dependencies": {
